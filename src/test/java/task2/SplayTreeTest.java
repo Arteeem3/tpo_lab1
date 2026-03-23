@@ -2,10 +2,39 @@ package task2;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 class SplayTreeTest {
+
+    private Integer[] treeToArray(Node root) {
+        if (root == null) return new Integer[0];
+
+        List<Integer> list = new ArrayList<>();
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(root);
+
+        while (!queue.isEmpty()) {
+            Node curr = queue.poll();
+            if (curr != null) {
+                list.add(curr.key);
+                queue.add(curr.left);
+                queue.add(curr.right);
+            } else {
+                list.add(null);
+            }
+        }
+
+        while (!list.isEmpty() && list.get(list.size() - 1) == null) {
+            list.remove(list.size() - 1);
+        }
+
+        return list.toArray(new Integer[0]);
+    }
 
     @Test
     void insertTest() {
@@ -16,9 +45,8 @@ class SplayTreeTest {
         root = tree.insert(root, 5);
         root = tree.insert(root, 15);
 
-        assertEquals(15, root.key);
-        assertEquals(10, root.left.key);
-        assertEquals(5, root.left.left.key);
+        Integer[] expected = {15, 10, null, 5};
+        assertArrayEquals(expected, treeToArray(root));
     }
 
     @Test
@@ -31,8 +59,8 @@ class SplayTreeTest {
         root = tree.insert(root, 15);
         root = tree.deleteKey(root, 5);
 
-        assertEquals(10, root.key);
-        assertEquals(15, root.right.key);
+        Integer[] expected = {10, null, 15};
+        assertArrayEquals(expected, treeToArray(root));
     }
 
     @Test
@@ -46,9 +74,8 @@ class SplayTreeTest {
 
         root = tree.search(root, 10);
 
-        assertEquals(10, root.key);
-        assertEquals(15, root.right.key);
-        assertEquals(5, root.left.key);
+        Integer[] expected = {10, 5, 15};
+        assertArrayEquals(expected, treeToArray(root));
     }
 
     @Test
@@ -59,8 +86,8 @@ class SplayTreeTest {
         root = tree.insert(root, 5);
         root = tree.insert(root, 5);
 
-        assertEquals(5, root.key);
-        assertNull(root.left);
+        Integer[] expected = {5};
+        assertArrayEquals(expected, treeToArray(root));
     }
 
     @Test
@@ -72,18 +99,18 @@ class SplayTreeTest {
         root = tree.insert(root, 9);
         root = tree.insert(root, 8);
 
-        assertEquals(8, root.key);
-        assertEquals(9, root.right.key);
-        assertEquals(10, root.right.right.key);
+        Integer[] expected = {8, null, 9, null, 10};
+        assertArrayEquals(expected, treeToArray(root));
     }
 
     @Test
     void deleteNullRoot() {
         SplayTree tree = new SplayTree();
         Node root = null;
-        tree.deleteKey(root, 2);
+        root = tree.deleteKey(root, 2);
 
-        assertNull(root);
+        Integer[] expected = {};
+        assertArrayEquals(expected, treeToArray(root));
     }
 
     @Test
@@ -99,7 +126,8 @@ class SplayTreeTest {
         root = tree.deleteKey(root, 8);
         root = tree.deleteKey(root, 4);
 
-        assertNull(root);
+        Integer[] expected = {};
+        assertArrayEquals(expected, treeToArray(root));
     }
 
     @Test
@@ -113,11 +141,8 @@ class SplayTreeTest {
         root = tree.insert(root, 30);
         root = tree.insert(root, 25);
 
-        assertEquals(25, root.key);
-        assertEquals(20, root.left.key);
-        assertEquals(30, root.right.key);
-        assertEquals(10, root.left.left.key);
-        assertEquals(50, root.right.right.key);
+        Integer[] expected = {25, 20, 30, 10, null, null, 50};
+        assertArrayEquals(expected, treeToArray(root));
     }
 
     @Test
@@ -133,11 +158,8 @@ class SplayTreeTest {
 
         root = tree.deleteKey(root, 26);
 
-        assertEquals(30, root.key);
-        assertEquals(25, root.left.key);
-        assertEquals(50, root.right.key);
-        assertEquals(20, root.left.left.key);
-        assertEquals(10, root.left.left.left.key);
+        Integer[] expected = {30, 25, 50, 20, null, null, null, 10};
+        assertArrayEquals(expected, treeToArray(root));
     }
 
     @Test
@@ -153,11 +175,8 @@ class SplayTreeTest {
 
         root = tree.search(root, 100);
 
-        assertEquals(50, root.key);
-        assertEquals(30, root.left.key);
-        assertEquals(25, root.left.left.key);
-        assertEquals(20, root.left.left.left.key);
-        assertEquals(10, root.left.left.left.left.key);
+        Integer[] expected = {50, 30, null, 25, null, 20, null, 10};
+        assertArrayEquals(expected, treeToArray(root));
     }
 
     @Test
@@ -170,10 +189,8 @@ class SplayTreeTest {
 
         root = tree.splay(root, 7);
 
-        assertEquals(8, root.key);
-        assertEquals(5, root.left.key);
-        assertEquals(10, root.right.key);
-        assertEquals(9, root.right.left.key);
+        Integer[] expected = {8, 5, 10, null, null, 9};
+        assertArrayEquals(expected, treeToArray(root));
     }
 
     @Test
@@ -185,10 +202,7 @@ class SplayTreeTest {
 
         root = tree.splay(root, 14);
 
-        assertEquals(12, root.key);
-        assertEquals(10, root.left.key);
-        assertEquals(15, root.right.key);
+        Integer[] expected = {12, 10, 15};
+        assertArrayEquals(expected, treeToArray(root));
     }
-
-
 }
