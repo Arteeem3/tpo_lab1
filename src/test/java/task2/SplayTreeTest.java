@@ -1,12 +1,10 @@
 package task2;
 
 import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 class SplayTreeTest {
@@ -37,44 +35,12 @@ class SplayTreeTest {
     }
 
     @Test
-    void insertTest() {
+    void deleteNullRoot() {
         SplayTree tree = new SplayTree();
         Node root = null;
+        root = tree.deleteKey(root, 2);
 
-        root = tree.insert(root, 10);
-        root = tree.insert(root, 5);
-        root = tree.insert(root, 15);
-
-        Integer[] expected = {15, 10, null, 5};
-        assertArrayEquals(expected, treeToArray(root));
-    }
-
-    @Test
-    void deleteTest() {
-        SplayTree tree = new SplayTree();
-        Node root = null;
-
-        root = tree.insert(root, 10);
-        root = tree.insert(root, 5);
-        root = tree.insert(root, 15);
-        root = tree.deleteKey(root, 5);
-
-        Integer[] expected = {10, null, 15};
-        assertArrayEquals(expected, treeToArray(root));
-    }
-
-    @Test
-    void findTest() {
-        SplayTree tree = new SplayTree();
-        Node root = null;
-
-        root = tree.insert(root, 10);
-        root = tree.insert(root, 5);
-        root = tree.insert(root, 15);
-
-        root = tree.search(root, 10);
-
-        Integer[] expected = {10, 5, 15};
+        Integer[] expected = {};
         assertArrayEquals(expected, treeToArray(root));
     }
 
@@ -91,42 +57,42 @@ class SplayTreeTest {
     }
 
     @Test
-    void insertTestWithLeftNode() {
+    void insertTest() {
         SplayTree tree = new SplayTree();
         Node root = null;
 
         root = tree.insert(root, 10);
-        root = tree.insert(root, 9);
-        root = tree.insert(root, 8);
+        root = tree.insert(root, 5);
+        root = tree.insert(root, 15);
 
-        Integer[] expected = {8, null, 9, null, 10};
+        Integer[] expected = {15, 10, null, 5};
         assertArrayEquals(expected, treeToArray(root));
     }
 
     @Test
-    void deleteNullRoot() {
+    void rightRotate() {
         SplayTree tree = new SplayTree();
-        Node root = null;
-        root = tree.deleteKey(root, 2);
+        Node root = new Node(10);
+        root.right = new Node(15);
+        root.right.left = new Node(12);
 
-        Integer[] expected = {};
+        root = tree.splay(root, 14);
+
+        Integer[] expected = {12, 10, 15};
         assertArrayEquals(expected, treeToArray(root));
     }
 
     @Test
-    void deleteRoot() {
+    void leftRotate() {
         SplayTree tree = new SplayTree();
-        Node root = null;
+        Node root = new Node(10);
+        root.left = new Node(5);
+        root.left.right = new Node(8);
+        root.left.right.right = new Node(9);
 
-        root = tree.insert(root, 3);
-        root = tree.insert(root, 8);
-        root = tree.insert(root, 4);
+        root = tree.splay(root, 7);
 
-        root = tree.deleteKey(root, 3);
-        root = tree.deleteKey(root, 8);
-        root = tree.deleteKey(root, 4);
-
-        Integer[] expected = {};
+        Integer[] expected = {8, 5, 10, null, null, 9};
         assertArrayEquals(expected, treeToArray(root));
     }
 
@@ -142,23 +108,6 @@ class SplayTreeTest {
         root = tree.insert(root, 25);
 
         Integer[] expected = {25, 20, 30, 10, null, null, 50};
-        assertArrayEquals(expected, treeToArray(root));
-    }
-
-    @Test
-    void deletingTest() {
-        SplayTree tree = new SplayTree();
-        Node root = null;
-
-        root = tree.insert(root, 50);
-        root = tree.insert(root, 20);
-        root = tree.insert(root, 10);
-        root = tree.insert(root, 30);
-        root = tree.insert(root, 25);
-
-        root = tree.deleteKey(root, 26);
-
-        Integer[] expected = {30, 25, 50, 20, null, null, null, 10};
         assertArrayEquals(expected, treeToArray(root));
     }
 
@@ -180,29 +129,92 @@ class SplayTreeTest {
     }
 
     @Test
-    void leftRotate() {
+    void findTest() {
         SplayTree tree = new SplayTree();
-        Node root = new Node(10);
-        root.left = new Node(5);
-        root.left.right = new Node(8);
-        root.left.right.right = new Node(9);
+        Node root = null;
 
-        root = tree.splay(root, 7);
+        root = tree.insert(root, 10);
+        root = tree.insert(root, 5);
+        root = tree.insert(root, 15);
 
-        Integer[] expected = {8, 5, 10, null, null, 9};
+        root = tree.search(root, 10);
+
+        Integer[] expected = {10, 5, 15};
         assertArrayEquals(expected, treeToArray(root));
     }
 
     @Test
-    void rightRotate() {
+    void deleteTest() {
         SplayTree tree = new SplayTree();
-        Node root = new Node(10);
-        root.right = new Node(15);
-        root.right.left = new Node(12);
+        Node root = null;
 
-        root = tree.splay(root, 14);
+        root = tree.insert(root, 10);
+        root = tree.insert(root, 5);
+        root = tree.insert(root, 15);
+        root = tree.deleteKey(root, 5);
 
-        Integer[] expected = {12, 10, 15};
+        Integer[] expected = {10, null, 15};
+        assertArrayEquals(expected, treeToArray(root));
+    }
+
+    @Test
+    void deleteTest2() {
+        SplayTree tree = new SplayTree();
+        Node root = null;
+
+        root = tree.insert(root, 10);
+        root = tree.insert(root, 5);
+        root = tree.insert(root, 15);
+        root = tree.deleteKey(root, 10);
+
+        Integer[] expected = {5, null, 15};
+        assertArrayEquals(expected, treeToArray(root));
+    }
+
+    @Test
+    void deleteTest3() {
+        SplayTree tree = new SplayTree();
+        Node root = null;
+
+        root = tree.insert(root, 50);
+        root = tree.insert(root, 20);
+        root = tree.insert(root, 10);
+        root = tree.insert(root, 30);
+        root = tree.insert(root, 25);
+
+        root = tree.deleteKey(root, 26);
+
+        Integer[] expected = {30, 25, 50, 20, null, null, null, 10};
+        assertArrayEquals(expected, treeToArray(root));
+    }
+
+    @Test
+    void deleteRoot() {
+        SplayTree tree = new SplayTree();
+        Node root = null;
+
+        root = tree.insert(root, 3);
+        root = tree.insert(root, 8);
+        root = tree.insert(root, 4);
+
+        root = tree.deleteKey(root, 3);
+        root = tree.deleteKey(root, 8);
+        root = tree.deleteKey(root, 4);
+
+        Integer[] expected = {};
+        assertArrayEquals(expected, treeToArray(root));
+    }
+
+    @Test
+    void insertTestWithLeftNode() {
+        SplayTree tree = new SplayTree();
+        Node root = null;
+
+        root = tree.insert(root, 10);
+        root = tree.insert(root, 9);
+        root = tree.insert(root, 8);
+
+        Integer[] expected = {8, null, 9, null, 10};
         assertArrayEquals(expected, treeToArray(root));
     }
 }
